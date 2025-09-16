@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 
 app.use(express.json());
+app.use(express.static("public"));
 
 let users = [
   { id: 1, name: "Sagar", salary: 50000 },

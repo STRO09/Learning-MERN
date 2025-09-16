@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=
+    , initial-scale=1.0"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h2>Add a User</h2>
+      <form action="/createuser" method="post">
+        Name:
+        <input type="text" id="name" /><br />
+        Salary:
+        <input type="number" id="salary" /><br />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <div>
+      <h2>Users</h2>
+      <table>
+        <thead>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Salary</th>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <script>
+      loadusers();
+      let form = document.querySelector("form");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("name").value;
+        const sal = document.getElementById("salary").value;
+        const res = await fetch("/createuser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            salary: sal,
+          }),
+        });
+        const user = await res.json();
+        form.reset();
+        loadusers();
+        // alert(`User{id:${user.id},name:${user.name},salary:${user.salary}}`); does not work
+      });
+
+      async function loadusers() {
+        const res = await fetch("/users");
+        const users = await res.json();
+        const tbody = document.getElementById("tbody");
+        tbody.innerHTML="";
+        users.forEach((user) => {
+          //   let tr = `<tr>
+          //         <td>${user.id}</td>
+          //         <td>${user.name}</td>
+          //         <td>${user.salary}</td>
+          //         <td><button id="delete">Delete</button></td>
+          //         </tr>`;
+          //   tbody.innerHTML += tr;
+          let tr = document.createElement("tr");
+          let tdid = document.createElement("td");
+          tdid.innerText = user.id;
+          tr.appendChild(tdid);
+          let tdname = document.createElement("td");
+          tdname.innerText = user.name;
+          tr.appendChild(tdname);
+          let tdsal = document.createElement("td");
+          tdsal.innerText = user.salary;
+          tr.appendChild(tdsal);
+
+          let tdupd = document.createElement("td");
+          let upd = document.createElement("button");
+          upd.innerText="Update";
+          upd.addEventListener("click", async () => {
+            const name = prompt("name");
+            const salary = prompt("salary");
+            await fetch(`/updateuser/${user.id}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                newname: name,
+                newsalary: salary,
+              }),
+            });
+            loadusers();
+          });
+          tdupd.appendChild(upd);
+          tr.appendChild(tdupd);
+
+          let tddel = document.createElement("td");
+          let del = document.createElement("button");
+          del.innerText="Delete";
+          del.addEventListener("click", async () => {
+            await fetch(`/deleteuser/${user.id}`, {
+              method: "delete",
+            });
+            loadusers();
+          });
+          tddel.appendChild(del);
+          tr.appendChild(tddel);
+
+          tbody.appendChild(tr);
+        });
+      }
+    </script>
+  </body>
+</html>
