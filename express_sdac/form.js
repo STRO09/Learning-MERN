@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({extended:false}))
 app.get('/', (req,res)=> {
     res.sendFile("/views/form.html", {root: __dirname});
 })
