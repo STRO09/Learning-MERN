@@ -1,4 +1,3 @@
-const { name } = require('ejs');
 const empModel = require('../model/emp');
 
 const getEmpDetails = async (req,res)=> {
