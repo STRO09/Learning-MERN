@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <!-- React and ReactDOM (development builds) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel: compiles JSX → JS in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+      function App() {
+        const [count, setCount] = useState(0);
+        const [list, setList] = useState([]);
+
+        useEffect(() => {
+          if (count == 10) {
+            setList((prev) => [...prev, "Good."]);
+          }
+          if (count == 20) {
+            setList((prev) => [...prev, "Nice!"]);
+          }
+
+          if (count == 30) {
+            setList((prev) => [...prev, "User is competitive."]);
+          }
+
+          if (count == 40) {
+            setList((prev) => [
+              ...prev,
+              "User is autistic and prolly has some form of brain damage",
+            ]);
+          }
+        }, [count]);
+
+        return (
+          <div>
+            <p>Count : {count}</p>
+            <button
+              onClick={() => {
+                setCount(count + 1);
+              }}
+            >
+              {" "}
+              Increment
+            </button>
+
+            <button
+              onClick={() => {
+                setCount(0);
+                setList([]);
+              }}
+            >
+              Reset
+            </button>
+
+            {count > 40 ? (
+              <p>STOP.</p>
+            ) : count > 30 ? (
+              <p>Okay bro stop already.</p>
+            ) : count > 20 ? (
+              <p> Cool thats high. you can stop.</p>
+            ) : count > 10 ? (
+              <p>Keep going!</p>
+            ) : (
+              <p>How much can you click?</p>
+            )}
+            <ul>
+              {list.map((message) => (
+                <li>{message}</li>
+              ))}
+            </ul>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
